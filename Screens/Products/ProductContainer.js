@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, ActivityIndicator, FlatList } from 'react-nativ
 
 const data = require('../../assets/data/products.json');
 
+import ProductList  from "../Products/ProductList";
+
 const ProductContainer = () => {
     const [ products, setProducts ] = useState([]);
 
@@ -22,7 +24,10 @@ const ProductContainer = () => {
                     horizontal
                     keyExtractor = {(item) => item.name}
                     data = {products}
-                    renderItem = {({item}) => <Text>{item.brand}</Text>}
+                    renderItem = {({item}) => <ProductList 
+                        key = {item.id}
+                        item = {item.id}    
+                    />}
                 />
             </View>
         </View>
