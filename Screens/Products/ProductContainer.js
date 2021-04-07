@@ -20,18 +20,18 @@ const ProductContainer = () => {
         <View>
             <View>
                 <Text>Product Container Screen</Text>
-                <View>
-                    <FlatList 
-                        numColumns={2}
-                        keyExtractor = {(item) => item.name}
-                        data = {products}
-                        renderItem = {({item}) => <ProductList 
-                            key={item.id} 
-                            item={item}
-                        />
-                        }
+            </View>
+            <View>
+                <FlatList 
+                    numColumns={2}
+                    keyExtractor = {(item) => item.name}
+                    data = {products}
+                    renderItem = {({item}) => <ProductList 
+                        key={item.id} 
+                        item={item}
                     />
-                </View>
+                    }
+                />
             </View>
         </View>
     )
