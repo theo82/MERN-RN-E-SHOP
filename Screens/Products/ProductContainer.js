@@ -21,7 +21,6 @@ const ProductContainer = () => {
             <Text>Product Container Screen</Text>
             <View style={{ margin: 100}}>
                 <FlatList 
-                    horizontal
                     numColumns={2}
                     keyExtractor = {(item) => item.name}
                     data = {products}
