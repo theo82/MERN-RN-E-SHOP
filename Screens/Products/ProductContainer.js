@@ -22,12 +22,14 @@ const ProductContainer = () => {
             <View style={{ margin: 100}}>
                 <FlatList 
                     horizontal
+                    numColumns={2}
                     keyExtractor = {(item) => item.name}
                     data = {products}
                     renderItem = {({item}) => <ProductList 
-                        key = {item.id}
-                        item = {item.id}    
-                    />}
+                        key={item.id} 
+                        item={item}
+                    />
+                    }
                 />
             </View>
         </View>
