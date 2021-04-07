@@ -19,7 +19,7 @@ const ProductContainer = () => {
     return (
         <View>
             <Text>Product Container Screen</Text>
-            <View style={{ margin: 100}}>
+            <View>
                 <FlatList 
                     numColumns={2}
                     keyExtractor = {(item) => item.name}
