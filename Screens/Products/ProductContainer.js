@@ -3,6 +3,7 @@ import { View, StyleSheet, ActivityIndicator, FlatList } from 'react-native';
 import { Container, Header, Icon, Item, Input, Text } from 'native-base';
 
 const data = require('../../assets/data/products.json');
+const categories = require('../../assets/data/categories.json');
 
 import ProductList  from "../Products/ProductList";
 import SearchedProduct from './SearchedProducts';
@@ -12,16 +13,24 @@ const ProductContainer = () => {
     const [ products, setProducts ] = useState([]);
     const [productsFiltered, setProductsFiltered] = useState([]);
     const [focus, setFocus] = useState();
-
+    const [categories, setCategories] = useState([]);
+    const [active, setActive] = useState();
+    const [initialState, setInitial] = useState([]);
     useEffect(() => {
         setProducts(data);
         setProductsFiltered(data);
         setFocus(data);
+        setCategories(categories);
+        setActive(-1);
+        setInitialState(data);
 
         return () => {
             setProducts([]);
             setProductsFiltered([])
             setFocus()
+            setCategories([]);
+            setActive();
+            setInitialState();
         }
     }, [])
 
