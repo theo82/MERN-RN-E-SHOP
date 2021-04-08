@@ -5,17 +5,38 @@ import { Container, Header, Icon, Item, Input, Text } from 'native-base';
 const data = require('../../assets/data/products.json');
 
 import ProductList  from "../Products/ProductList";
+import SearchedProduct from './SearchedProducts';
 
 const ProductContainer = () => {
     const [ products, setProducts ] = useState([]);
+    const [productsFiltered, setProductsFiltered] = useState([]);
+    const [focus, setFocus] = useState();
 
     useEffect(() => {
         setProducts(data);
+        setProductsFiltered(data);
+        setFocus(data);
 
         return () => {
-            setProducts([])
+            setProducts([]);
+            setProductsFiltered([])
+            setFocus()
         }
     }, [])
+
+    const seachProduct = (text) => {
+        setProductsFiltered(
+            products.filter((i) => i.name.toLowerCase().includes(text.toLowerCase()))
+        )
+    }
+
+    const openList = () => {
+        setFocus(true);
+    }
+
+    const onBlur = () => {
+        setFocus(false);
+    }
 
     return (
         <Container>
@@ -24,14 +45,19 @@ const ProductContainer = () => {
                     <Icon name="ios-search"/>
                     <Input 
                         placeholder="Search"
-                        // onFocus={}
-                        // onChangeText = {(text) => }
-
-                        
+                        onFocus={openList}
+                        onChangeText = {(text) => seachProduct(text)}
                     />
+                    {focus === true ? (
+                        <Icon onPress={onBlur} name="ios-close" />
+                    ): null}
                 </Item>
             </Header>
-            
+            {focus === true ? (
+                <SearchedProduct 
+                    productsFiltered = {productsFiltered}
+                />
+            ) : (
             <View style={styles.container}>
                     <Text>Product Container Screen</Text>
                 <View style={styles.listContainer}>
@@ -47,6 +73,8 @@ const ProductContainer = () => {
                     />
                 </View>
             </View>
+            )}
+            
         </Container>
     )
 }
