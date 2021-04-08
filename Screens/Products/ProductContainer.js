@@ -6,6 +6,7 @@ const data = require('../../assets/data/products.json');
 
 import ProductList  from "../Products/ProductList";
 import SearchedProduct from './SearchedProducts';
+import Banner from '../../Shared/Banner';
 
 const ProductContainer = () => {
     const [ products, setProducts ] = useState([]);
@@ -59,7 +60,9 @@ const ProductContainer = () => {
                 />
             ) : (
             <View style={styles.container}>
-                    <Text>Product Container Screen</Text>
+                <View>
+                    <Banner />
+                </View>
                 <View style={styles.listContainer}>
                     <FlatList 
                         numColumns={2}
