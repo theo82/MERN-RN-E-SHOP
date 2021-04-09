@@ -8,6 +8,7 @@ const categories = require('../../assets/data/categories.json');
 import ProductList  from "../Products/ProductList";
 import SearchedProduct from './SearchedProducts';
 import Banner from '../../Shared/Banner';
+import CategoryFilter from '../../Screens/Products/CategoryFilter';
 
 const ProductContainer = () => {
     const [ products, setProducts ] = useState([]);
@@ -15,7 +16,7 @@ const ProductContainer = () => {
     const [focus, setFocus] = useState();
     const [categories, setCategories] = useState([]);
     const [active, setActive] = useState();
-    const [initialState, setInitial] = useState([]);
+    const [initialState, setInitialState] = useState([]);
     useEffect(() => {
         setProducts(data);
         setProductsFiltered(data);
@@ -68,9 +69,10 @@ const ProductContainer = () => {
                     productsFiltered = {productsFiltered}
                 />
             ) : (
-            <View style={styles.container}>
+            <View>
                 <View>
                     <Banner />
+                    <CategoryFilter />
                 </View>
                 <View style={styles.listContainer}>
                     <FlatList 
