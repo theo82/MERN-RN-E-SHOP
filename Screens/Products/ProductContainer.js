@@ -3,7 +3,7 @@ import { View, StyleSheet, ActivityIndicator, FlatList } from 'react-native';
 import { Container, Header, Icon, Item, Input, Text } from 'native-base';
 
 const data = require('../../assets/data/products.json');
-const categories = require('../../assets/data/categories.json');
+const productCategories = require('../../assets/data/categories.json');
 
 import ProductList  from "../Products/ProductList";
 import SearchedProduct from './SearchedProducts';
@@ -15,13 +15,15 @@ const ProductContainer = () => {
     const [productsFiltered, setProductsFiltered] = useState([]);
     const [focus, setFocus] = useState();
     const [categories, setCategories] = useState([]);
+    const [productsCtg, setProductsCtg] = useState([]);
     const [active, setActive] = useState();
     const [initialState, setInitialState] = useState([]);
+    
     useEffect(() => {
         setProducts(data);
         setProductsFiltered(data);
         setFocus(data);
-        setCategories(categories);
+        setCategories(productCategories);
         setActive(-1);
         setInitialState(data);
 
@@ -49,6 +51,20 @@ const ProductContainer = () => {
         setFocus(false);
     }
 
+    // Categories
+    const changeCtg = (ctg) => {
+        {
+            ctg === 'all'
+            ? [setProductsCtg(initialState), setActive(true)]
+            : [
+                setProductsCtg(
+                    products.filter((i) => i.category.$oid === ctg),
+                    setActive(true)
+                )
+            ]
+        }
+    }
+
     return (
         <Container>
             <Header searchBar rounded >
@@ -72,7 +88,13 @@ const ProductContainer = () => {
             <View>
                 <View>
                     <Banner />
-                    <CategoryFilter />
+                    <CategoryFilter 
+                      categories={categories}
+                      categoryFilter={changeCtg}
+                      productsCtg={productsCtg}
+                      active={active}
+                      setActive={setActive}
+                    />
                 </View>
                 <View style={styles.listContainer}>
                     <FlatList 
