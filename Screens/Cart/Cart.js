@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  Button,
+} from 'react-native';
 
 import {
   Container,
@@ -19,6 +25,12 @@ import * as actions from '../..//Redux/Actions/cartActions';
 
 var { height, width } = Dimensions.get('window');
 const Cart = (props) => {
+  var total = 0;
+
+  props.cartItems.forEach((cart) => {
+    return (total += cart.product.price);
+  });
+
   return (
     <>
       {props.cartItems.length ? (
@@ -47,6 +59,20 @@ const Cart = (props) => {
               </ListItem>
             );
           })}
+          <View style={styles.bottomContainer}>
+            <Left>
+              <Text style={styles.price}>$ {total}</Text>
+            </Left>
+            <Right>
+              <Button title='Clear' />
+            </Right>
+            <Right>
+              <Button
+                title='Checkout'
+                onPress={() => props.navigation.navigate('Checkout')}
+              />
+            </Right>
+          </View>
         </Container>
       ) : (
         <Container style={styles.emptyContainer}>
@@ -80,6 +106,19 @@ const styles = StyleSheet.create({
     margin: 10,
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  bottomContainer: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    backgroundColor: 'white',
+    elevation: 20,
+  },
+  price: {
+    fontSize: 18,
+    margin: 20,
+    color: 'red',
   },
 });
 
