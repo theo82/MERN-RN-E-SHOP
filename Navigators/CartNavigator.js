@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Cart from '../Screens/Cart/Cart';
-import CartCheckout from '../Screens/Cart/CartCheckout';
+import CartCheckout from '../Screens/Cart/Checkout/CartCheckout';
 
 const Stack = createStackNavigator();
 
