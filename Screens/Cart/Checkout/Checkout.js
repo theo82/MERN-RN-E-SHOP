@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 const Checkout = () => {
   return (
     <View>
-      <Text>CONFIRM</Text>
+      <Text>CHECKOUT</Text>
     </View>
   );
 };
