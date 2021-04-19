@@ -7,8 +7,11 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import { Container, Header, Icon, Item, Input, Text } from 'native-base';
 
+import { Container, Header, Icon, Item, Input, Text } from 'native-base';
+import baseURL from '../../assets/common/baseUrl';
+
+import axios from 'axios';
 const data = require('../../assets/data/products.json');
 const productCategories = require('../../assets/data/categories.json');
 
@@ -30,21 +33,23 @@ const ProductContainer = (props) => {
   const [initialState, setInitialState] = useState([]);
 
   useEffect(() => {
-    setProducts(data);
-    setProductsFiltered(data);
     setFocus(false);
     setCategories(productCategories);
-    setProductsCtg(data);
     setActive(-1);
-    setInitialState(data);
 
+    axios.get(`${baseURL}products`).then((res) => {
+      setProducts(res.data);
+      setProductsFiltered(res.data);
+      setProductsCtg(res.data);
+      setInitialState(res.data);
+    });
     return () => {
       setProducts([]);
       setProductsFiltered([]);
       setFocus();
       setCategories([]);
       setActive();
-      setInitialState();
+      setInitialState([]);
     };
   }, []);
 
