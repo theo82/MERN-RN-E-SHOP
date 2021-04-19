@@ -34,15 +34,25 @@ const ProductContainer = (props) => {
 
   useEffect(() => {
     setFocus(false);
-    setCategories(productCategories);
     setActive(-1);
 
+    // Products
     axios.get(`${baseURL}products`).then((res) => {
       setProducts(res.data);
       setProductsFiltered(res.data);
       setProductsCtg(res.data);
       setInitialState(res.data);
     });
+
+    // Categories
+    axios
+      .get(`${baseURL}categories`)
+      .then((res) => {
+        setCategories(res.data);
+      })
+      .catch((err) => {
+        console.log('Api call Error');
+      });
     return () => {
       setProducts([]);
       setProductsFiltered([]);
@@ -74,7 +84,7 @@ const ProductContainer = (props) => {
         ? [setProductsCtg(initialState), setActive(true)]
         : [
             setProductsCtg(
-              products.filter((i) => i.category.$iod === ctg),
+              products.filter((i) => i.category._id === ctg),
               setActive(true)
             ),
           ];
