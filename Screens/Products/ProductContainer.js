@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   StyleSheet,
@@ -19,7 +19,7 @@ import ProductList from '../Products/ProductList';
 import SearchedProduct from './SearchedProducts';
 import Banner from '../../Shared/Banner';
 import CategoryFilter from '../../Screens/Products/CategoryFilter';
-import { useLinkProps } from '@react-navigation/native';
+import { useFocusEffect, useLinkProps } from '@react-navigation/native';
 
 var { height } = Dimensions.get('window');
 
@@ -31,39 +31,49 @@ const ProductContainer = (props) => {
   const [productsCtg, setProductsCtg] = useState([]);
   const [active, setActive] = useState();
   const [initialState, setInitialState] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setFocus(false);
-    setActive(-1);
+  useFocusEffect(
+    useCallback(() => {
+      setFocus(false);
+      setActive(-1);
 
-    // Products
-    axios.get(`${baseURL}products`).then((res) => {
-      setProducts(res.data);
-      setProductsFiltered(res.data);
-      setProductsCtg(res.data);
-      setInitialState(res.data);
-    });
+      // Products
+      axios
+        .get(`${baseURL}products`)
+        .then((res) => {
+          setProducts(res.data);
+          setProductsFiltered(res.data);
+          setProductsCtg(res.data);
+          setInitialState(res.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log('Api call error');
+        });
 
-    // Categories
-    axios
-      .get(`${baseURL}categories`)
-      .then((res) => {
-        setCategories(res.data);
-      })
-      .catch((err) => {
-        console.log('Api call Error');
-      });
-    return () => {
-      setProducts([]);
-      setProductsFiltered([]);
-      setFocus();
-      setCategories([]);
-      setActive();
-      setInitialState([]);
-    };
-  }, []);
+      // Categories
+      axios
+        .get(`${baseURL}categories`)
+        .then((res) => {
+          setCategories(res.data);
+        })
+        .catch((error) => {
+          console.log('Api call error');
+        });
 
-  const seachProduct = (text) => {
+      return () => {
+        setProducts([]);
+        setProductsFiltered([]);
+        setFocus();
+        setCategories([]);
+        setActive();
+        setInitialState();
+      };
+    }, [])
+  );
+
+  const searchProduct = (text) => {
     setProductsFiltered(
       products.filter((i) => i.name.toLowerCase().includes(text.toLowerCase()))
     );
@@ -92,59 +102,73 @@ const ProductContainer = (props) => {
   };
 
   return (
-    <Container>
-      <Header searchBar rounded>
-        <Item>
-          <Icon name='ios-search' />
-          <Input
-            placeholder='Search'
-            onFocus={openList}
-            onChangeText={(text) => seachProduct(text)}
-          />
-          {focus === true ? <Icon onPress={onBlur} name='ios-close' /> : null}
-        </Item>
-      </Header>
-      {focus === true ? (
-        <SearchedProduct
-          navigation={props.navigation}
-          productsFiltered={productsFiltered}
-        />
-      ) : (
-        <ScrollView>
-          <View>
-            <View>
-              <Banner />
-              <CategoryFilter
-                categories={categories}
-                categoryFilter={changeCtg}
-                productsCtg={productsCtg}
-                active={active}
-                setActive={setActive}
+    <>
+      {loading == false ? (
+        <Container>
+          <Header searchBar rounded>
+            <Item>
+              <Icon name='ios-search' />
+              <Input
+                placeholder='Search'
+                onFocus={openList}
+                onChangeText={(text) => searchProduct(text)}
               />
-            </View>
-            {productsCtg.length > 0 ? (
-              <View style={styles.listContainer}>
-                {productsCtg.map((item) => {
-                  return (
-                    <ProductList
-                      navigation={props.navigation}
-                      key={item._id.$oid}
-                      item={item}
-                    />
-                  );
-                })}
+              {focus == true ? (
+                <Icon onPress={onBlur} name='ios-close' />
+              ) : null}
+            </Item>
+          </Header>
+          {focus == true ? (
+            <SearchedProduct
+              navigation={props.navigation}
+              productsFiltered={productsFiltered}
+            />
+          ) : (
+            <ScrollView>
+              <View>
+                <View>
+                  <Banner />
+                </View>
+                <View>
+                  <CategoryFilter
+                    categories={categories}
+                    categoryFilter={changeCtg}
+                    productsCtg={productsCtg}
+                    active={active}
+                    setActive={setActive}
+                  />
+                </View>
+                {productsCtg.length > 0 ? (
+                  <View style={styles.listContainer}>
+                    {productsCtg.map((item) => {
+                      return (
+                        <ProductList
+                          navigation={props.navigation}
+                          key={item.name}
+                          item={item}
+                        />
+                      );
+                    })}
+                  </View>
+                ) : (
+                  <View style={[styles.center, { height: height / 2 }]}>
+                    <Text>No products found</Text>
+                  </View>
+                )}
               </View>
-            ) : (
-              <View style={[styles.center, { height: height / 2 }]}>
-                <Text>No products found</Text>
-              </View>
-            )}
-          </View>
-        </ScrollView>
+            </ScrollView>
+          )}
+        </Container>
+      ) : (
+        // Loading
+        <Container style={[styles.center, { backgroundColor: '#f2f2f2' }]}>
+          <ActivityIndicator size='large' color='red' />
+        </Container>
       )}
-    </Container>
+    </>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flexWrap: 'wrap',
