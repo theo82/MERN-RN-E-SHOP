@@ -16,7 +16,7 @@ const Login = (props) => {
     };
 
     if (email === '' || password === '') {
-      setError('Please fill in your credential');
+      setError('Please fill in your credentials');
     } else {
       console.log('success');
     }
