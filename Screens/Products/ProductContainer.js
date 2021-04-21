@@ -4,8 +4,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   FlatList,
-  ScrollView,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 
 import { Container, Header, Icon, Item, Input, Text } from 'native-base';
@@ -124,7 +124,7 @@ const ProductContainer = (props) => {
               productsFiltered={productsFiltered}
             />
           ) : (
-            <ScrollView>
+            <ScrollView style={{ paddingBottom: 40 }}>
               <View>
                 <View>
                   <Banner />
