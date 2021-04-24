@@ -36,7 +36,7 @@ const Register = (props) => {
           Toast.show({
             type: 'success',
             text1: 'Registration Succeded',
-            text2: ' Please into your acccount',
+            text2: ' Please login into your acccount',
           });
           setTimeout(() => {
             props.navigation.navigate('Login');
@@ -46,7 +46,7 @@ const Register = (props) => {
       .catch((error) => {
         Toast.show({
           topOffset: 60,
-          type: 'error',
+          type: error,
           text1: 'Something went wrong',
           text2: 'Please try again',
         });
