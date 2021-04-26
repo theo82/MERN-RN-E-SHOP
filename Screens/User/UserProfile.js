@@ -28,13 +28,9 @@ const UserProfile = (props) => {
           .get(`${baseURL}users/${context.stateUser.user.userId}`, {
             headers: { Authorization: `Bearer ${res}` },
           })
-          .then((user) => {
-            setUserProfile(user.data);
-          });
+          .then((user) => setUserProfile(user.data));
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((error) => console.log(error));
 
     return () => {
       setUserProfile();
