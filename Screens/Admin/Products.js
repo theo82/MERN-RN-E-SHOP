@@ -50,7 +50,29 @@ const Products = (props) => {
 
   return (
     <View>
-      <Text>Products Screen</Text>
+      <View>
+        <Header searchBar rounded>
+          <Item style={{ padding: 5 }}>
+            <Icon name='seach' />
+            <Input
+              placeholder='Search'
+              // onChange
+            />
+          </Item>
+        </Header>
+      </View>
+
+      {loading ? (
+        <View>
+          <ActivityIndicator size='large' color='red' />
+        </View>
+      ) : (
+        <FlatList
+          data={productFilter}
+          renderItem={({ item, index }) => <Text>{item.name}</Text>}
+          keyExtractor={(item) => item.id}
+        />
+      )}
     </View>
   );
 };
