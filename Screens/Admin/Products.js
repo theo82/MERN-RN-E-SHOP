@@ -26,6 +26,28 @@ const Products = (props) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState();
 
+  var { height, width } = Dimensions.get('window');
+
+  const ListHeader = () => {
+    return (
+      <View elevation={1} style={styles.listHeader}>
+        <View style={styles.headerItem}></View>
+        <View style={styles.headerItem}>
+          <Text style={{ fontWeight: '600' }}>Brand</Text>
+        </View>
+        <View style={styles.headerItem}>
+          <Text style={{ fontWeight: '600' }}>Name</Text>
+        </View>
+        <View style={styles.headerItem}>
+          <Text style={{ fontWeight: '600' }}>Category</Text>
+        </View>
+        <View style={styles.headerItem}>
+          <Text style={{ fontWeight: '600' }}>Price</Text>
+        </View>
+      </View>
+    );
+  };
+
   useFocusEffect(
     useCallback(() => {
       // Get Token
@@ -65,12 +87,13 @@ const Products = (props) => {
       </View>
 
       {loading ? (
-        <View>
+        <View style={styles.spinner}>
           <ActivityIndicator size='large' color='red' />
         </View>
       ) : (
         <FlatList
           data={productFilter}
+          ListHeaderComponent={ListHeader}
           renderItem={({ item, index }) => (
             <ListIem {...item} navigation={props.navigation} index={index} />
           )}
@@ -81,4 +104,20 @@ const Products = (props) => {
   );
 };
 
+const styles = StyleSheet.create({
+  listHeader: {
+    flexDirection: 'row',
+    padding: 5,
+    backgroundColor: 'gainsboro',
+  },
+  headerItem: {
+    margin: 3,
+    width: width / 6,
+  },
+  spinner: {
+    height: height / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 export default Products;
