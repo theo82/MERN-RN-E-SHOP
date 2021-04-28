@@ -12,7 +12,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useFocusEffect } from '@react-navigation/native';
 
 import axios from 'axios';
-import baseUrl from '../../assets/common/baseUrl';
 import AsyncStorage from '@react-native-community/async-storage';
 import baseURL from '../../assets/common/baseUrl';
 
@@ -72,15 +71,26 @@ const Products = (props) => {
     }, [])
   );
 
+  const searchProduct = (text) => {
+    if (text == '') {
+      setProductFilter(productList);
+    }
+    setProductFilter(
+      productList.filter((i) =>
+        i.name.toLowerCase().includes(text.toLowerCase())
+      )
+    );
+  };
+
   return (
     <View>
       <View>
         <Header searchBar rounded>
           <Item style={{ padding: 5 }}>
-            <Icon name='seach' />
+            <Icon name='search' />
             <Input
               placeholder='Search'
-              // onChange
+              onChangeText={(text) => searchProduct(text)}
             />
           </Item>
         </Header>
