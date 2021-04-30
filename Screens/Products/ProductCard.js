@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 
+import EasyButton from '../../Shared/StyledComponents/EasyButton';
 import { connect } from 'react-redux';
 import * as actions from '../../Redux/Actions/cartActions';
 import Toast from 'react-native-toast-message';
@@ -36,9 +37,9 @@ const ProductCard = (props) => {
 
       {countInStock > 0 ? (
         <View style={{ marginBottom: 60 }}>
-          <Button
-            title={'Add'}
-            color={'green'}
+          <EasyButton
+            primary
+            medium
             onPress={() => {
               props.addItemToCart(props);
               Toast.show({
@@ -48,7 +49,9 @@ const ProductCard = (props) => {
                 text2: 'Go to your cart to complete your order',
               });
             }}
-          ></Button>
+          >
+            <Text style={{ color: 'white' }}>Add</Text>
+          </EasyButton>
         </View>
       ) : (
         <Text style={{ margin: 20 }}>Currently Unavailable</Text>

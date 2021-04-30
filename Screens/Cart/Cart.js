@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Button,
 } from 'react-native';
-
+import EasyButton from '../../Shared/StyledComponents/EasyButton';
 import {
   Container,
   Text,
@@ -64,13 +64,24 @@ const Cart = (props) => {
               <Text style={styles.price}>$ {total}</Text>
             </Left>
             <Right>
-              <Button title='Clear' onPress={() => props.clearCart()} />
+              <EasyButton
+                danger
+                medium
+                title='Clear'
+                onPress={() => props.clearCart()}
+              >
+                <Text style={{ color: 'white' }}>Clear</Text>
+              </EasyButton>
             </Right>
             <Right>
-              <Button
+              <EasyButton
+                primary
+                medium
                 title='Checkout'
                 onPress={() => props.navigation.navigate('Checkout')}
-              />
+              >
+                <Text style={{ color: 'white' }}>Checkout</Text>
+              </EasyButton>
             </Right>
           </View>
         </Container>
