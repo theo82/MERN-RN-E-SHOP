@@ -10,14 +10,35 @@ import {
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import EasyButton from '../../Shared/StyledComponents/EasyButton';
+import TrafficLight from '../../Shared/StyledComponents/TrafficLight';
 
 import { Left, Right, Container, H1 } from 'native-base';
 import * as actions from '../../Redux/Actions/cartActions';
 import { connect } from 'react-redux';
+import { set } from 'react-native-reanimated';
 
 const SingleProduct = (props) => {
   const [item, setItem] = useState(props.route.params.item);
-  const [avalability, setAvailability] = useState('');
+  const [availability, setAvailability] = useState(null);
+  const [availabilityText, setAvailabilityText] = useState('');
+
+  useEffect(() => {
+    if (props.route.params.item.countInStock == 0) {
+      setAvailability(<TrafficLight unavailable></TrafficLight>);
+      setAvailabilityText('Unvailable');
+    } else if (props.route.params.item.countInStock <= 5) {
+      setAvailability(<TrafficLight limited></TrafficLight>);
+      setAvailabilityText('Limited Stock');
+    } else {
+      setAvailability(<TrafficLight available></TrafficLight>);
+      setAvailabilityText('Available');
+    }
+
+    return () => {
+      setAvailability(null);
+      setAvailabilityText('');
+    };
+  }, []);
 
   return (
     <Container style={styles.container}>
@@ -37,8 +58,17 @@ const SingleProduct = (props) => {
           <H1 style={styles.contentHeader}>{item.name}</H1>
           <Text style={styles.contentText}>{item.brand}</Text>
         </View>
-        {/* TODO: Description, Rich Description and Availability*/}
+        <View style={styles.availabilityContainer}>
+          <View style={styles.availability}>
+            <Text style={{ marginRight: 10 }}>
+              Availability: {availabilityText}
+            </Text>
+            {availability}
+          </View>
+          <Text>{item.description}</Text>
+        </View>
       </ScrollView>
+
       <View style={styles.bottomContainer}>
         <Left>
           <Text style={styles.price}>$ {item.price}</Text>
@@ -65,11 +95,10 @@ const SingleProduct = (props) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapToDispatchToProps = (dispatch) => {
   return {
-    addItemToCart: (product) => {
-      dispatch(actions.addToCart({ quantity: 1, product }));
-    },
+    addItemToCart: (product) =>
+      dispatch(actions.addToCart({ quantity: 1, product })),
   };
 };
 
@@ -113,6 +142,14 @@ const styles = StyleSheet.create({
     margin: 20,
     color: 'red',
   },
+  availabilityContainer: {
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  availability: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
 });
 
-export default connect(null, mapDispatchToProps)(SingleProduct);
+export default connect(null, mapToDispatchToProps)(SingleProduct);
