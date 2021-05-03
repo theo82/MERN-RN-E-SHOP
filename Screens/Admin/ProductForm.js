@@ -20,7 +20,7 @@ import baseURL from '../../assets/common/baseUrl';
 import axios from 'axios';
 
 const ProductForm = (props) => {
-  const [pickerValue, setPickerValue] = useState();
+  const [pickerValue, setPickerValue] = useState([]);
   const [brand, setBrand] = useState();
   const [name, setName] = useState();
   const [price, setPrice] = useState();
