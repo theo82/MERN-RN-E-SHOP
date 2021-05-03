@@ -20,7 +20,7 @@ import baseURL from '../../assets/common/baseUrl';
 import axios from 'axios';
 
 const ProductForm = (props) => {
-  const [pickerValue, setPicker] = useState();
+  const [pickerValue, setPickerValue] = useState();
   const [brand, setBrand] = useState();
   const [name, setName] = useState();
   const [price, setPrice] = useState();
@@ -30,13 +30,25 @@ const ProductForm = (props) => {
   const [category, setCategory] = useState();
   const [categories, setCategories] = useState([]);
   const [token, setToken] = useState();
-  const [err, setError] = useState();
+  const [err, setErr] = useState();
   const [countInStock, setCountInStock] = useState();
   const [rating, setRating] = useState();
-  const [isFeatured, setIsFeature] = useState(false);
+  const [isFeatured, setIsFeatured] = useState(false);
   const [richDescription, setRichDescription] = useState();
-  const [numReviews, setNumReviews] = useState(0);
+  const [numReviews, setNumReviews] = useState();
   const [item, setItem] = useState(null);
+
+  useEffect(() => {
+    // Categories
+    axios
+      .get(`${baseURL}categories`)
+      .then((res) => setCategories(res.data))
+      .catch((error) => alert('Error to load categories'));
+
+    return () => {
+      setCategories([]);
+    };
+  }, []);
 
   return (
     <FormContainer>
@@ -98,6 +110,22 @@ const ProductForm = (props) => {
         value={description}
         onChangeText={(text) => setDescription(text)}
       />
+      <Item picker>
+        <Picker
+          mode='dropdown'
+          iosIcon={<Icon color={'#007aff'} name='arrow-down' />}
+          style={{ width: undefined }}
+          placeholder='Select your Category'
+          selectedValue={pickerValue}
+          placeholderStyle={{ color: '#007aff' }}
+          placeholderIconColor='#007aff'
+          onValueChange={(e) => [setPickerValue(e), setCategory(e)]}
+        >
+          {categories.map((c) => {
+            return <Picker.Item key={c.id} label={c.name} value={c.id} />;
+          })}
+        </Picker>
+      </Item>
     </FormContainer>
   );
 };
