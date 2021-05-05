@@ -19,8 +19,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import baseURL from '../../assets/common/baseUrl';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
-import { add } from 'react-native-reanimated';
-
+import mime from 'mime';
 const ProductForm = (props) => {
   const [pickerValue, setPickerValue] = useState();
   const [brand, setBrand] = useState();
@@ -94,6 +93,14 @@ const ProductForm = (props) => {
     }
 
     let formData = new FormData();
+
+    const newImageUri = 'file:///' + image.split('file:/').join('');
+
+    formData.append('image', {
+      uri: newImageUri,
+      type: mime.getType(newImageUri),
+      name: newImageUri.split('/').pop(),
+    });
 
     formData.append('name', name);
     formData.append('brand', brand);
