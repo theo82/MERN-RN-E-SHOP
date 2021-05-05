@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import baseURL from '../../assets/common/baseUrl';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
+import { add } from 'react-native-reanimated';
 
 const ProductForm = (props) => {
   const [pickerValue, setPickerValue] = useState();
@@ -40,6 +41,12 @@ const ProductForm = (props) => {
   const [item, setItem] = useState(null);
 
   useEffect(() => {
+    AsyncStorage.getItem('jwt')
+      .then((res) => {
+        setToken(res);
+      })
+      .catch((error) => console.log(error));
+
     // Categories
     axios
       .get(`${baseURL}categories`)
@@ -72,6 +79,63 @@ const ProductForm = (props) => {
       setMainImage(result.uri);
       setImage(result.uri);
     }
+  };
+
+  const addProduct = () => {
+    if (
+      name == '' ||
+      brand == '' ||
+      price == '' ||
+      description == '' ||
+      category == '' ||
+      countInStock == ''
+    ) {
+      setError('Please fill in the form correctly');
+    }
+
+    let formData = new FormData();
+
+    formData.append('name', name);
+    formData.append('brand', brand);
+    formData.append('price', price);
+    formData.append('description', description);
+    formData.append('category', category);
+    formData.append('countInStock', countInStock);
+    formData.append('richDescription', richDescription);
+    formData.append('rating', rating);
+    formData.append('numReviews', numReviews);
+    formData.append('isFeatured', isFeatured);
+
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .post(`${baseURL}products`, formData, config)
+      .then((res) => {
+        if (res.status == 200 || res.status == 201) {
+          Toast.show({
+            topOffset: 60,
+            type: 'success',
+            text1: 'New Product added',
+            text2: '',
+          });
+          setTimeout(() => {
+            props.navigation.navigate('Products');
+          }, 500);
+        }
+      })
+      .catch((error) => {
+        Toast.show({
+          topOffset: 60,
+          type: 'error',
+          text1: 'Something went wrong',
+          text2: 'Please try again',
+        });
+      });
   };
 
   return (
@@ -109,12 +173,12 @@ const ProductForm = (props) => {
         placeholder='Price'
         name='price'
         id='price'
-        value={brand}
+        value={price}
         keyboardType={'numeric'}
         onChangeText={(text) => setPrice(text)}
       />
       <View style={styles.label}>
-        <Text style={{ textDecorationLine: 'underline' }}>Stock</Text>
+        <Text style={{ textDecorationLine: 'underline' }}>Count in Stock</Text>
       </View>
       <Input
         placeholder='Stock'
@@ -152,11 +216,7 @@ const ProductForm = (props) => {
       </Item>
       {err ? <Error message={err} /> : null}
       <View style={styles.buttonContainer}>
-        <EasyButton
-          large
-          primary
-          //onPress
-        >
+        <EasyButton large primary onPress={() => addProduct()}>
           <Text style={styles.buttonText}>Confirm</Text>
         </EasyButton>
       </View>
