@@ -101,7 +101,7 @@ const ProductForm = (props) => {
       type: mime.getType(newImageUri),
       name: newImageUri.split('/').pop(),
     });
-
+    formData.append('image', image);
     formData.append('name', name);
     formData.append('brand', brand);
     formData.append('price', price);
@@ -217,7 +217,7 @@ const ProductForm = (props) => {
           onValueChange={(e) => [setPickerValue(e), setCategory(e)]}
         >
           {categories.map((c) => {
-            return <Picker.Item key={c.id} label={c.name} value={c.id} />;
+            return <Picker key={c.id} label={c.name} value={c.name} />;
           })}
         </Picker>
       </Item>
